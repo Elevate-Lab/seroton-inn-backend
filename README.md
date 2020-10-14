@@ -12,6 +12,23 @@ A template repo for making our lives easier 🐬
 We are here to allow collaboration through this Organization inorder to lift/elevate each other through learning.Amazing!!:heart_eyes::heart_eyes:
 
  Anyone and everyone is welcomed!:sunglasses:
+ 
+ 
+##  Tech Stack for the Project :collision::collision:
+
+This Project includes a tech stack of Front end and Back end Development.:cop:
+
+| FRONT END    :heart_eyes::heart_eyes: | BACK END     :stuck_out_tongue_winking_eye::stuck_out_tongue_winking_eye:           |
+| ------------------------------------- | ------------------------------------------------------------------------------------|
+| HTML, CSS, JAVASCRIPT                 |    MongoDB                                                                          |
+| React.js                              |    Node.js                                                                          |
+| Sass                                  |    Express.js                                                                       |
+| Mobile: Flutter                       |    Firebase                                                                         |
+|                                       |                                                                                     |
+
+> PS: This repo is to deal with the Backend Development of the Project.
+ 
+ 
 
 ## Contributors ✨
 
