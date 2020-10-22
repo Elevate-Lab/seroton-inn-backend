@@ -5,7 +5,6 @@ const postSchema = new mongoose.Schema({
     caption: String,
     creationTime: Number,
     creatorEmail: String,
-    creatorUID: String,
     contentLink: String
 });
 
