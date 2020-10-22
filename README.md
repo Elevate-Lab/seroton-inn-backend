@@ -30,6 +30,15 @@ This Project includes a tech stack of Front end and Back end Development.:cop:
  
  
 
+## To run locally
+```bash
+$ git clone https://github.com/Elevate-Lab/seroton-inn-backend 
+$ cd seroton-inn-backend
+$ npm i
+$ nodemon server.js
+```
+Navigate to `localhost:5000` on your Browser. 
+
 ## Contributors ✨
 
 Thanks goes to these wonderful people 💜 ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
