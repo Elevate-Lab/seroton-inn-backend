@@ -1,14 +1,51 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const bodyParser = require("body-parser");
 
-require("dotenv/config");
+const User = require('./models/userModel');
+
+// require("dotenv/config");
 
 const port = process.env.PORT || 5000;
 const app = express();
 
+app.use(bodyParser.urlencoded({extended: true}));
+
+/* -------- Set up session ------------*/
+app.use(session({
+    secret: "Our little secret.",
+    resave: false,
+    saveUninitialized: false
+  }));
+  
+  app.use(passport.initialize());
+  app.use(passport.session());
+  /* -------- Session set up ended ------------*/
+
+
+  /* -------- Passport serialise ------------*/
+  passport.use(User.createStrategy());
+
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+  
+  passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+      done(err, user);
+    });
+  });
+  /* -------- Passport serialise ended ------------*/
+
+
 /*Routes Config*/
 
 const indexRoute = require("./routes/index");
+const registerRoute = require('./routes/auth/register');
+const loginRoute = require('./routes/auth/login');
+const googleAuth = require('./routes/auth/googleAuth');
 
 /*-----Routes Config End------*/
 
@@ -16,6 +53,9 @@ const indexRoute = require("./routes/index");
 /*App Config*/
 
 app.use("/",indexRoute);
+app.use("/register", registerRoute);
+app.use("/login", loginRoute);
+app.use("/auth/google", googleAuth);
 
 /*------App Config End--------*/
 
