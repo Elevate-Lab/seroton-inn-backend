@@ -46,6 +46,7 @@ const indexRoute = require("./routes/index");
 const registerRoute = require('./routes/auth/register');
 const loginRoute = require('./routes/auth/login');
 const googleAuth = require('./routes/auth/googleAuth');
+const userOperation = require('./routes/user/user_operations')
 
 /*-----Routes Config End------*/
 
@@ -56,6 +57,7 @@ app.use("/",indexRoute);
 app.use("/register", registerRoute);
 app.use("/login", loginRoute);
 app.use("/auth/google", googleAuth);
+app.use("/user" , userOperation);
 
 /*------App Config End--------*/
 
