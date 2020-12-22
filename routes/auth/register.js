@@ -19,7 +19,7 @@ router.post("/", (req,res) => {
         } else {
 
           //This function will add the email ID of the user to the document.
-          User.updateOne({_id: user._id}, {googleId: req.body.email}, function(err){
+          User.updateOne({_id: user._id}, {email: req.body.email}, function(err){
             if(err){
               console.log(err);
             } else {
