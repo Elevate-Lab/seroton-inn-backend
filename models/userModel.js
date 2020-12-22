@@ -8,14 +8,12 @@ const userSchema = new mongoose.Schema({
     password: String,
     name: String,
     email: String,
-    profilePic: String
+    profilePic: String,
+    account_activation_status: Boolean
 });
 
 userSchema.plugin(passportLocalMongoose);
 
 userSchema.plugin(findOrCreate);
 
-const User = new mongoose.model("User", userSchema);
-
-
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);
