@@ -3,15 +3,15 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const findOrCreate = require("mongoose-findorcreate");
 
 const userSchema = new mongoose.Schema({
-  username: String,
-  googleId: String,
-  password: String,
-  name: String,
-  profilePic: String,
+    username: String,
+    googleId: String,
+    password: String,
+    name: String,
+    profilePic: String,
+    account_activation_status: Boolean
 });
 
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
-const User = new mongoose.model("User", userSchema);
 
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);
