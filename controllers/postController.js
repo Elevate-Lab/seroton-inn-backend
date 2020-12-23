@@ -1,4 +1,4 @@
-const postModel = require("../models/postModel");
+const postModel = require('../models/postModel');
 
 exports.createPost = async (req, res) => {
   try {
@@ -21,3 +21,26 @@ exports.updatePost = async (req, res) => {
   await postModel.findByIdAndUpdate(id, req.body);
   res.redirect("/");
 };
+
+exports.getAllPost = async (req, res) => {
+  const { dbQuery } = res.locals;
+  delete res.locals.dbQuery;
+  let posts = await postModel.paginate(dbQuery, {
+    page: req.query.page || 1,
+    limit: 10,
+    sort: '-creationTime'
+  });
+  if (!posts.docs.length && res.locals.query) {
+    console.log('No results match that query!');
+  }
+  return posts;
+}
+
+exports.getSinglePost = async (req, res) => {
+  try {
+    let post = await postModel.findById(req.params.id);
+    return post;
+  } catch (err) {
+    return err;
+  }
+}
