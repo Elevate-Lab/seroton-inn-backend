@@ -5,6 +5,7 @@ const postSchema = new mongoose.Schema({
   creationTime: Number,
   creatorEmail: String,
   contentLink: String,
+  fileName: String
 });
 
 module.exports = mongoose.model("Post", postSchema);

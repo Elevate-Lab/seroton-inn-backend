@@ -3,12 +3,21 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const User = require("./models/userModel");
+const cors = require('cors')
+const bodyParser = require('body-parser')
+
+// imp packages for file uploads
+const multer = require('multer')
+const GridFsStorage = require('multer-gridfs-storage')
+const Grid = require('gridfs-stream')
 
 // require("dotenv/config");
 
 const port = process.env.PORT || 5000;
 const app = express();
-app.use(express.json());
+app.use(cors());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 /* -------- Set up session ------------*/
 app.use(
@@ -68,8 +77,12 @@ mongoose.connect(uri, {
   useUnifiedTopology: true,
 });
 const connection = mongoose.connection;
+let gfs
 connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
+  gfs = new mongoose.mongo.GridFSBucket(connection.db, {
+    bucketName: 'imageUpload'
+  })
 });
 
 /*----Mongoose config End-----*/
