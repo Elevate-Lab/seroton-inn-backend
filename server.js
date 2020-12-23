@@ -3,15 +3,29 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const passport = require('passport');
 const bodyParser = require("body-parser");
+const cors = require('cors');
 
 const User = require('./models/userModel');
 
-// require("dotenv/config");
+require("dotenv/config");
+
 
 const port = process.env.PORT || 5000;
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+app.use(bodyParser.urlencoded({extended: true}));
+
+//Including CORS to facilitate frontend/backend communication
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // All requests from this server will be intercepted here.
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true // Facilitates browser session cookies
+  })
+);
 
 /* -------- Set up session ------------*/
 app.use(session({
