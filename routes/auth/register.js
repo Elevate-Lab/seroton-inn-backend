@@ -17,6 +17,15 @@ router.post("/", (req,res) => {
           console.log(err);
           res.redirect("/register");
         } else {
+
+          //This function will add the email ID of the user to the document.
+          User.updateOne({_id: user._id}, {email: req.body.email}, function(err){
+            if(err){
+              console.log(err);
+            } else {
+              console.log("Email updated!");
+            }
+          });
           passport.authenticate("local")(req, res, function(){
             res.send("Registered Successfully !\n"+user);
           });

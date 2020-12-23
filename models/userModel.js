@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
     googleId: String,
     password: String,
     name: String,
+    email: String,
     profilePic: String,
     account_activation_status: Boolean
 });

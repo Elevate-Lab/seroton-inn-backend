@@ -11,22 +11,33 @@ const multer = require('multer')
 const GridFsStorage = require('multer-gridfs-storage')
 const Grid = require('gridfs-stream')
 
-// require("dotenv/config");
+require("dotenv/config");
 
 const port = process.env.PORT || 5000;
 const app = express();
+
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-/* -------- Set up session ------------*/
+//Including CORS to facilitate frontend/backend communication
+const cors = require("cors");
+
 app.use(
-  session({
-    secret: "Our little secret.",
-    resave: false,
-    saveUninitialized: false,
+  cors({
+    origin: "http://localhost:3000", // All requests from this server will be intercepted here.
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true // Facilitates browser session cookies
   })
 );
+
+/* -------- Set up session ------------*/
+
+app.use(session({
+  secret: "Our little secret.",
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -46,14 +57,16 @@ passport.deserializeUser(function (id, done) {
 });
 /* -------- Passport serialise ended ------------*/
 
+/* -------- Passport serialise ended ------------*/
+
 /*Routes Config*/
 
 const indexRoute = require("./routes/index");
-const postRoute = require("./routes/post");
-const registerRoute = require("./routes/auth/register");
-const loginRoute = require("./routes/auth/login");
-const googleAuth = require("./routes/auth/googleAuth");
-const userOperation = require('./routes/user/user_operations')
+const registerRoute = require('./routes/auth/register');
+const loginRoute = require('./routes/auth/login');
+const googleAuth = require('./routes/auth/googleAuth');
+const userOperation = require('./routes/user/user_operations');
+const postsRoute = require('./routes/post');
 
 /*-----Routes Config End------*/
 
@@ -63,8 +76,9 @@ app.use("/", indexRoute);
 app.use("/register", registerRoute);
 app.use("/login", loginRoute);
 app.use("/auth/google", googleAuth);
-app.use("/posts", postRoute);
-app.use("/user" , userOperation);
+app.use("/user", userOperation);
+app.use("/posts", postsRoute);
+
 
 /*------App Config End--------*/
 
@@ -74,8 +88,9 @@ const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/sereton-inn";
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useCreateIndex: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 });
+
 const connection = mongoose.connection;
 let gfs
 connection.once("open", () => {
