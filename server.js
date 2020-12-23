@@ -1,20 +1,24 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const passport = require('passport');
-const bodyParser = require("body-parser");
-const cors = require('cors');
+const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const passport = require("passport");
+const User = require("./models/userModel");
+const cors = require('cors')
+const bodyParser = require('body-parser')
 
-const User = require('./models/userModel');
+// imp packages for file uploads
+const multer = require('multer')
+const GridFsStorage = require('multer-gridfs-storage')
+const Grid = require('gridfs-stream')
 
 require("dotenv/config");
-
 
 const port = process.env.PORT || 5000;
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 //Including CORS to facilitate frontend/backend communication
 const cors = require("cors");
@@ -28,6 +32,7 @@ app.use(
 );
 
 /* -------- Set up session ------------*/
+
 app.use(session({
   secret: "Our little secret.",
   resave: false,
@@ -37,7 +42,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 /* -------- Session set up ended ------------*/
-
 
 /* -------- Passport serialise ------------*/
 passport.use(User.createStrategy());
@@ -53,6 +57,7 @@ passport.deserializeUser(function (id, done) {
 });
 /* -------- Passport serialise ended ------------*/
 
+/* -------- Passport serialise ended ------------*/
 
 /*Routes Config*/
 
@@ -65,7 +70,6 @@ const postsRoute = require('./routes/post');
 
 /*-----Routes Config End------*/
 
-
 /*App Config*/
 
 app.use("/", indexRoute);
@@ -75,20 +79,25 @@ app.use("/auth/google", googleAuth);
 app.use("/user", userOperation);
 app.use("/posts", postsRoute);
 
+
 /*------App Config End--------*/
 
-
 /* Mongoose config*/
-const uri = process.env.MONGO_URL || "mongodb://localhost:27017/sereton-inn";
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/sereton-inn";
 
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
 });
+
 const connection = mongoose.connection;
-connection.once('open', () => {
+let gfs
+connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
+  gfs = new mongoose.mongo.GridFSBucket(connection.db, {
+    bucketName: 'imageUpload'
+  })
 });
 
 /*----Mongoose config End-----*/
