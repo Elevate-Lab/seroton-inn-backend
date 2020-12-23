@@ -20,9 +20,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//Including CORS to facilitate frontend/backend communication
-const cors = require("cors");
-
 app.use(
   cors({
     origin: "http://localhost:3000", // All requests from this server will be intercepted here.
@@ -66,7 +63,7 @@ const registerRoute = require('./routes/auth/register');
 const loginRoute = require('./routes/auth/login');
 const googleAuth = require('./routes/auth/googleAuth');
 const userOperation = require('./routes/user/user_operations');
-const postsRoute = require('./routes/post');
+const postsRoute = require('./routes/post/postRoute');
 
 /*-----Routes Config End------*/
 
