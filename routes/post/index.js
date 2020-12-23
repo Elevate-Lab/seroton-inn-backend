@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Post = require('../../models/postModel');
+const { createPost, updatePost } = require("../../controllers/postController");
+const upload = require('../../middlewares/upload')
+
+router.route("/create").post(upload.single("file"),createPost);
+router.route("/update/:id").post(updatePost);
+
 
 // Function to Escape Regular Expressions
 function escapeRegExp(string) {
@@ -64,3 +70,5 @@ router.get('/:id', async (req, res) => {
     return err;
   }
 });
+
+module.exports = router

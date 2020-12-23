@@ -20,9 +20,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-//Including CORS to facilitate frontend/backend communication
-const cors = require("cors");
-
 app.use(
   cors({
     origin: "http://localhost:3000", // All requests from this server will be intercepted here.
