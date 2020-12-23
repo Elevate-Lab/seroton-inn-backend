@@ -1,82 +1,92 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const session = require('express-session');
-const passport = require('passport');
-const bodyParser = require("body-parser");
+const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const passport = require("passport");
+const User = require("./models/userModel");
+const cors = require('cors')
+const bodyParser = require('body-parser')
 
-const User = require('./models/userModel');
+// imp packages for file uploads
+const multer = require('multer')
+const GridFsStorage = require('multer-gridfs-storage')
+const Grid = require('gridfs-stream')
 
 // require("dotenv/config");
 
 const port = process.env.PORT || 5000;
 const app = express();
-
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(cors());
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 /* -------- Set up session ------------*/
-app.use(session({
+app.use(
+  session({
     secret: "Our little secret.",
     resave: false,
-    saveUninitialized: false
-  }));
-  
-  app.use(passport.initialize());
-  app.use(passport.session());
-  /* -------- Session set up ended ------------*/
+    saveUninitialized: false,
+  })
+);
 
+app.use(passport.initialize());
+app.use(passport.session());
+/* -------- Session set up ended ------------*/
 
-  /* -------- Passport serialise ------------*/
-  passport.use(User.createStrategy());
+/* -------- Passport serialise ------------*/
+passport.use(User.createStrategy());
 
-  passport.serializeUser(function(user, done) {
-    done(null, user.id);
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
   });
-  
-  passport.deserializeUser(function(id, done) {
-    User.findById(id, function(err, user) {
-      done(err, user);
-    });
-  });
-  /* -------- Passport serialise ended ------------*/
-
+});
+/* -------- Passport serialise ended ------------*/
 
 /*Routes Config*/
 
 const indexRoute = require("./routes/index");
-const registerRoute = require('./routes/auth/register');
-const loginRoute = require('./routes/auth/login');
-const googleAuth = require('./routes/auth/googleAuth');
+const postRoute = require("./routes/post");
+const registerRoute = require("./routes/auth/register");
+const loginRoute = require("./routes/auth/login");
+const googleAuth = require("./routes/auth/googleAuth");
 const userOperation = require('./routes/user/user_operations')
 
 /*-----Routes Config End------*/
 
-
 /*App Config*/
 
-app.use("/",indexRoute);
+app.use("/", indexRoute);
 app.use("/register", registerRoute);
 app.use("/login", loginRoute);
 app.use("/auth/google", googleAuth);
+app.use("/posts", postRoute);
 app.use("/user" , userOperation);
 
 /*------App Config End--------*/
 
-
 /* Mongoose config*/
-const uri = process.env.MONGO_URL || "mongodb://localhost:27017/sereton-inn";
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/sereton-inn";
 
 mongoose.connect(uri, {
-    useNewUrlParser: true, 
-    useCreateIndex: true, 
-    useUnifiedTopology: true 
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
 });
 const connection = mongoose.connection;
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
+let gfs
+connection.once("open", () => {
+  console.log("MongoDB database connection established successfully");
+  gfs = new mongoose.mongo.GridFSBucket(connection.db, {
+    bucketName: 'imageUpload'
+  })
 });
 
 /*----Mongoose config End-----*/
 
-app.listen(port,() => {
-    console.log(`Server started on port ${port}`);
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });
