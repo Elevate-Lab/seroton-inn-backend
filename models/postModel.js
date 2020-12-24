@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const mongoosePaginate = require('mongoose-paginate');
 
 const postSchema = new mongoose.Schema({
   content: String,
@@ -8,4 +9,6 @@ const postSchema = new mongoose.Schema({
   fileName: String,
 });
 
+
+postSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model("Post", postSchema);
