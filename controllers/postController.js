@@ -33,7 +33,7 @@ exports.getAllPost = async (req, res) => {
   if (!posts.docs.length && res.locals.query) {
     console.log('No results match that query!');
   }
-  return posts;
+  res.json(posts);
 }
 
 exports.getSinglePost = async (req, res) => {
