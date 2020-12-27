@@ -64,6 +64,7 @@ const loginRoute = require('./routes/auth/login');
 const googleAuth = require('./routes/auth/googleAuth');
 const userOperation = require('./routes/user/user_operations');
 const postsRoute = require('./routes/post/postRoute');
+const commentRoute = require('./routes/comment/commentRoute');
 
 /*-----Routes Config End------*/
 
@@ -75,6 +76,7 @@ app.use("/login", loginRoute);
 app.use("/auth/google", googleAuth);
 app.use("/user", userOperation);
 app.use("/posts", postsRoute);
+app.use("/comments", commentRoute);
 
 
 /*------App Config End--------*/
