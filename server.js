@@ -91,11 +91,34 @@ mongoose.connect(uri, {
 });
 
 const connection = mongoose.connection;
-let gfs
+
+let gfs;
 connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
-  gfs = new mongoose.mongo.GridFSBucket(connection.db, {
-    bucketName: 'imageUpload'
+  
+  //Initialize our stream
+  gfs = Grid(connection.db, mongoose.mongo);
+  gfs.collection('imageUpload');
+});
+
+app.get('/image/:imageName', (req, res) => {
+  gfs.files.findOne({ filename: req.params.imageName }, (err, file) => {
+    //check if files exist
+    if (!file || file.length == 0) {
+      return res.status(404).json({
+        err: "No files exist"
+      })
+    }
+    //check if image
+    if (file.contentType === 'image/jpeg' || file.contentType === "image/png") {
+      //read output to browser
+      const readStream = gfs.createReadStream(file.filename)
+      readStream.pipe(res)
+    } else {
+      res.status(404).json({
+        err: "Not an image"
+      })
+    }
   })
 });
 
