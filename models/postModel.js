@@ -6,7 +6,7 @@ const postSchema = new mongoose.Schema({
   creationTime: Number,
   creatorEmail: String,
   contentLink: String,
-  fileName: String,
+  fileDetails: Object,
 });
 
 

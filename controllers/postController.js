@@ -7,7 +7,7 @@ exports.createPost = async (req, res) => {
       creationTime: req.body.creationTime,
       creatorEmail: req.body.creatorEmail,
       contentLink: req.body.contentLink,
-      fileName: req.file.filename,
+      fileDetails: req.file,
     });
     await post.save();
     res.json(post);
@@ -39,7 +39,7 @@ exports.getAllPost = async (req, res) => {
 exports.getSinglePost = async (req, res) => {
   try {
     let post = await postModel.findById(req.params.id);
-    return post;
+    res.send({post});
   } catch (err) {
     return err;
   }
