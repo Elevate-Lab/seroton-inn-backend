@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     password: String,
     name: String,
     email: String,
-    profilePic: String,
+    profilePic: Object,
     account_activation_status: Boolean
 });
 
