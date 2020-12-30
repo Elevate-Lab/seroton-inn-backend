@@ -1,49 +1,20 @@
 const express = require('express')
-const User = require('../../models/userModel')
-const user_operations = express.Router()
+const User = require('../../models/userModel');
+const router = express.Router()
+const upload = require('../../middlewares/upload');
 
-user_operations.get('/:user_id/getProfile' ,(req , res) => {
-    var googleId = req.params.user_id;
-    User.find({googleId: googleId}, function(err,response){
-        if(err){
-            res.json({message: err});
-        }
-        else{
-            res.json({user: response});
-        }
-    })
-});
+const { getUserProfile, updateProfile, addProfilePic, deleteProfile } = require('../../controllers/userController');
 
-user_operations.patch('/:user_id/editUser' , async (req , res)=> {
-    var user_id = req.params.user_id;
+//Route to get Profile Details of a single User
+router.get('/:user_id/getProfile',getUserProfile)
 
-    User.findOneAndUpdate({googleId: user_id} , {
-        username: req.body.username,
-        password: req.body.password,
-        name: req.body.name,
-        profilePic: req.body.profilePic
-    },function(err,response){
-        if(err){
-            console.log(err);
-        }
-        else{
-            console.log("user", response);
-        }
-    });
-});
+//Route to add Profile Photo of a user
+router.route('/:userGoogleId/addProfilePic').patch(upload.single("file"), addProfilePic);
 
-user_operations.post('/:user_id/delete' , (req , res) => {
-    var user_id = req.params.user_id;
-    User.findOneAndUpdate({googleId: user_id} , {
-        account_activation_status: false
-    },function(err,response) {
-        if(err){
-            console.log(err);
-        }
-        else{
-            console.log("deletion successfull");
-        }
-    });
-});
+//Route to update Profile Details(name, username,Profile Photo) of a user 
+router.route("/:userGoogleId/editUser").patch(upload.single("file"), updateProfile);
 
-module.exports = user_operations;
+//Route to delete profile of a user
+router.route('/:userGoogleiD/delete').patch(upload.single("file"), deleteProfile);
+    
+module.exports = router
