@@ -9,12 +9,12 @@ const { getUserProfile, updateProfile, addProfilePic, deleteProfile } = require(
 router.get('/:user_id/getProfile',getUserProfile)
 
 //Route to add Profile Photo of a user
-router.route('/:userGoogleId/addProfilePic').patch(upload.single("file"), addProfilePic);
+router.route('/:user_id/addProfilePic').patch(upload.single("file"), addProfilePic);
 
 //Route to update Profile Details(name, username,Profile Photo) of a user 
-router.route("/:userGoogleId/editUser").patch(upload.single("file"), updateProfile);
+router.route("/:user_id/editUser").patch(upload.single("file"), updateProfile);
 
 //Route to delete profile of a user
-router.route('/:userGoogleiD/delete').patch(upload.single("file"), deleteProfile);
+router.route('/:user_id/delete').patch(upload.single("file"), deleteProfile);
     
 module.exports = router
