@@ -3,8 +3,8 @@ const User = require('../models/userModel');
 //Function to send details of a user
 exports.getUserProfile = async (req,res) => {
     try {
-        var googleId = req.params.user_id;
-        const userDetails = await User.find({googleId: googleId});
+        var userId = req.params.user_id;
+        const userDetails = await User.findById(userId);
         res.json({user: userDetails});
     } catch (error) {
         return res.status(400).send(`Error: ${err}`);
@@ -13,8 +13,8 @@ exports.getUserProfile = async (req,res) => {
 
 //Function to Upload profile photo
 exports.addProfilePic = async (req,res) => {
-    var userGoogleId = req.params.userGoogleId;
-    User.findOne({googleId: userGoogleId}, async function(err,response) {
+    var userId = req.params.user_id;
+    User.findById(userId, async function(err,response) {
         if(err){
             res.status(404).send(`Error: ${err}`);
         }
@@ -24,7 +24,7 @@ exports.addProfilePic = async (req,res) => {
                     const profilePic = {
                         profilePic: req.file
                     }
-                    const profilePicAdded = await User.findOneAndUpdate({ googleId: userGoogleId }, profilePic);
+                    const profilePicAdded = await User.findByIdAndUpdate(userId, profilePic);
                     res.send({ profilePic: profilePic });
 
                 } catch (err) {
@@ -41,13 +41,13 @@ exports.addProfilePic = async (req,res) => {
 //Function to Update Profile Details
 exports.updateProfile = async (req,res) => {
     try {
-        var userGoogleId = req.params.userGoogleId;
+        var userId = req.params.user_id;
         const userdetails = {
             username: req.body.username,
             name: req.body.name,
             profilePic: req.file
         }
-        const userdetailsUpdated = await User.findOneAndUpdate({googleId : userGoogleId},userdetails);
+        const userdetailsUpdated = await User.findByIdAndUpdate(userId,userdetails);
         res.send({user: userdetails});
     } catch (err) {
         return res.status(400).send(`Error: ${err}`);
@@ -56,15 +56,15 @@ exports.updateProfile = async (req,res) => {
 
 //Function to delete a User
 exports.deleteProfile = async (req,res) => {
-    var userGoogleId = req.params.userGoogleId;
-    User.findOne({ googleId: userGoogleId }, async function (err, response) {
+    var userId = req.params.user_id;
+    User.findById(userId, async function (err, response) {
         if (err) {
             res.status(404).send(`Error: ${err}`);
         }
         else {
             if (response.account_activation_status === true) {
                 try {
-                    await User.findOneAndUpdate({ googleId: userGoogleId }, {
+                    await User.findByIdAndUpdate(userId, {
                         account_activation_status: false
                     }, function(error,response){
                         res.send({response});
